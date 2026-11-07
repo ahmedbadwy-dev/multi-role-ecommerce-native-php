@@ -1,23 +1,14 @@
-<?php
-require_once __DIR__ . "/../../../model/User.php";
-
-$userClass = new User();
 
 
-
-
-
-$roles = $userClass->get_all_roles();
-
-?>
 
 
 <div class="card">
     <div class="card-header text-center">
-        <h3> "Create New User" </h3>
+        <h2> "Welcome User" </h2>
+
     </div>
     <div class="card-body">
-        <form action="../../controller/admin/user/AddUserController.php" method="post">
+        <form action="../controller/auth/RegisterUserController.php" method="post">
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" name="username" class="form-control">
@@ -41,18 +32,7 @@ $roles = $userClass->get_all_roles();
                 <p class="text-danger"><?= isset($_SESSION["usersError"]["telephone"]) ? $_SESSION["usersError"]["telephone"] : '' ?></p>
 
             </div>
-            <div class="form-group">
-                <label for="role">Role</label>
-                <select name="role" id="role" class="form-control">
-                    <?php
-                    foreach ($roles as $role) {
-                    ?>
-                        <option value="<?= htmlspecialchars($role['id']) ?>"><?= htmlspecialchars($role["role"]) ?></option>
-                    <?php } ?>
-                </select>
-                <p class="text-danger"><?= isset($_SESSION["usersError"]["role"]) ? $_SESSION["usersError"]["role"] : ''  ?></p>
 
-            </div>
             <div class="form-group">
                 <label for="date">Birth-Date</label>
                 <input type="date" name="birth_date" id="date" class="form-control">
@@ -60,7 +40,7 @@ $roles = $userClass->get_all_roles();
 
             </div>
             <div class="form-group">
-                <input type="submit" value="Create User" class="btn btn-success w-100 py-1 form-control" style="font-size: 20px; ">
+                <input type="submit" value="Register" class="btn btn-success w-100 py-1 form-control" style="font-size: 20px; ">
             </div>
         </form>
     </div>

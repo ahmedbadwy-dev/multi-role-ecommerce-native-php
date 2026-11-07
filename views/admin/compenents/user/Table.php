@@ -1,5 +1,5 @@
 <?php
-require_once  __DIR__ . "/../../../model/User.php";
+require_once  __DIR__ . "/../../../../model/User.php";
 
 $instanse = new User();
 $users = $instanse->get_all_users();

@@ -69,7 +69,51 @@ class User
         $user = $oneUser->rowCount();
         return $user;
     }
+    function register_user($insertUser)
+    {
 
+
+        $query = "INSERT INTO users(username,email,password,birth_date,telephone) VALUES(:username,:email,:password,:birth_date,:telephone) ";
+        $oneUser = $this->conn->prepare($query);
+        $oneUser->execute($insertUser);
+        $user = $oneUser->rowCount();
+        return $user;
+    }
+
+    function login_user($email)
+    {
+
+        $query = "SELECT * FROM users WHERE email=?";
+        $oneUser = $this->conn->prepare($query);
+        $oneUser->execute([$email]);
+        $user = $oneUser->fetch();
+        return $user;
+    }
+
+    function get_permmision_user($id)
+    {
+        $query = "SELECT 
+    users.id AS id, 
+    users.username, 
+    users.email, 
+    users.telephone, 
+    roles.role, 
+    GROUP_CONCAT(permission.title) AS permissions 
+FROM users 
+LEFT JOIN roles ON users.role_id = roles.id 
+LEFT JOIN permission_roles ON roles.id = permission_roles.role_id
+LEFT JOIN permission ON permission.id = permission_roles.permission_id 
+WHERE users.id = ?
+GROUP BY users.id;
+";
+          
+
+
+        $allUsers = $this->conn->prepare($query);
+        $allUsers->execute([$id]);
+        $users = $allUsers->fetch();
+        return $users;
+    }
 
     function get_all_roles()
     {
