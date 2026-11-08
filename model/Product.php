@@ -1,23 +1,40 @@
 <?php
-require_once __DIR__."/../dbConnection.php";
-class Product{
-  private $conn;
-     function __construct()
-     {
-     $instanseConnection= PdoConnect::get_instanse();
-     $this->conn=$instanseConnection->get_connection();
-        
-     }
+require_once __DIR__ . "/../dbConnection.php";
+class Product
+{
+    private $conn;
+    function __construct()
+    {
+        $instanseConnection = PdoConnect::get_instanse();
+        $this->conn = $instanseConnection->get_connection();
+    }
 
-     function get_all_products(){
-         
-       $query= "SELECT pro.id,  pro.title,pro.price,pro.rate,pro.description,categories.category ,pro.image  FROM products AS pro INNER JOIN categories ON pro.category_id= categories.id ";
-       $allProducts=$this->conn->prepare($query);
-       $allProducts->execute();
-       $products=$allProducts->fetchAll();
-       return $products;     
+    function get_all_products()
+    {
 
-     }
+        $query = "SELECT pro.id,  pro.title,pro.price,pro.rate,pro.description,categories.category ,pro.image  FROM products AS pro INNER JOIN categories ON pro.category_id= categories.id ";
+        $allProducts = $this->conn->prepare($query);
+        $allProducts->execute();
+        $products = $allProducts->fetchAll();
+        return $products;
+    }
+
+    function get_products_by_category($category_id)
+    {
+        $query = "SELECT p.*, c.category FROM products AS p INNER JOIN categories AS c ON p.category_id = c.id WHERE p.category_id = ? ORDER BY p.id DESC";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute([$category_id]);
+        return $stmt->fetchAll();
+    }
+
+    function get_category_name($category_id)
+    {
+        $query = "SELECT category FROM categories WHERE id = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute([$category_id]);
+        $category = $stmt->fetch();
+        return $category ? $category['category'] : 'Category';
+    }
 
     function get_product($id)
     {
@@ -30,7 +47,7 @@ class Product{
     }
     function delete_product(...$id)
     {
-        $placeholder=implode(',',array_fill(0,count($id),'?'));
+        $placeholder = implode(',', array_fill(0, count($id), '?'));
 
         $query = "DELETE  FROM products WHERE id IN($placeholder)";
         $oneProduct = $this->conn->prepare($query);
@@ -57,17 +74,17 @@ class Product{
         $products = $oneProduct->rowCount();
         return $products;
     }
-    function insert_product(array $insertProducts){
-    
+    function insert_product(array $insertProducts)
+    {
+
 
         $query = "INSERT INTO  products (title,category_id,price,description,rate,image) VALUES(?,?,?,?,?,?)";
         $oneProduct = $this->conn->prepare($query);
         $oneProduct->execute(array_values($insertProducts));
         $productId = $this->conn->lastInsertId();
         return $productId;
-        
-}
-  function get_all_categories()
+    }
+    function get_all_categories()
     {
 
         $query = "SELECT * FROM categories";

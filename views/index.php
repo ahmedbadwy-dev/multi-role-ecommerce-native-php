@@ -1,5 +1,15 @@
 <?php
-require_once __DIR__ . "/../sessionConfig.php"
+require_once __DIR__ . "/../sessionConfig.php";
+require_once __DIR__ . "/../model/Product.php";
+
+$productModel = new Product();
+$categories = $productModel->get_all_categories();
+$categoryImages = [
+    "../assetviews/img/cat-img-1.jpg",
+    "../assetviews/img/cat-img-2.jpg",
+    "../assetviews/img/cat-img-3.jpg",
+    "../assetviews/img/cat-img-4.jpg",
+];
 ?>
 <!DOCTYPE html>
 <html>
@@ -38,42 +48,17 @@ require_once __DIR__ . "/../sessionConfig.php"
 
 <body>
     <div class="page-holder">
-        <!-- navbar-->
-        <header class="header bg-white">
-            <div class="container px-0 px-lg-3">
-                <nav class="navbar navbar-expand-lg navbar-light py-3 px-lg-0"><a class="navbar-brand" href="index.html"><span class="font-weight-bold text-uppercase text-dark">Boutique</span></a>
-                    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav mr-auto">
-                            <li class="nav-item">
-                                <!-- Link--><a class="nav-link active" href="index.html">Home</a>
-                            </li>
-                            <li class="nav-item">
-                                <!-- Link--><a class="nav-link" href="shop.html">Shop</a>
-                            </li>
-                            <li class="nav-item">
-                                <!-- Link--><a class="nav-link" href="detail.html">Product detail</a>
-                            </li>
-                            <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" id="pagesDropdown" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pages</a>
-                                <div class="dropdown-menu mt-3" aria-labelledby="pagesDropdown"><a class="dropdown-item border-0 transition-link" href="index.html">Homepage</a><a class="dropdown-item border-0 transition-link" href="shop.html">Category</a><a class="dropdown-item border-0 transition-link" href="detail.html">Product detail</a><a class="dropdown-item border-0 transition-link" href="cart.html">Shopping cart</a><a class="dropdown-item border-0 transition-link" href="checkout.html">Checkout</a></div>
-                            </li>
-                        </ul>
-                        <ul class="navbar-nav ml-auto">
-                            <li class="nav-item"><a class="nav-link" href="cart.html"> <i class="fas fa-dolly-flatbed mr-1 text-gray"></i>Cart<small class="text-gray">(2)</small></a></li>
-                            <li class="nav-item"><a class="nav-link" href="#"> <i class="far fa-heart mr-1"></i><small class="text-gray"> (0)</small></a></li>
-                            <li class="nav-item"><a class="nav-link" href="#"> <i class="fas fa-user-alt mr-1 text-gray"></i>Login</a></li>
-                        </ul>
-                    </div>
-                </nav>
-            </div>
-        </header>
+        <?php
+        $headerActivePage = 'home';
+        require_once __DIR__ . "/compenents/site/header.php";
+        ?>
         <!--  Modal -->
         <div class="modal fade" id="productView" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-body p-0">
                         <div class="row align-items-stretch">
-                            <div class="col-lg-6 p-lg-0"><a class="product-view d-block h-100 bg-cover bg-center" style="background: url(img/product-5.jpg)" href="img/product-5.jpg" data-lightbox="productview" title="Red digital smartwatch"></a><a class="d-none" href="img/product-5-alt-1.jpg" title="Red digital smartwatch" data-lightbox="productview"></a><a class="d-none" href="img/product-5-alt-2.jpg" title="Red digital smartwatch" data-lightbox="productview"></a></div>
+                            <div class="col-lg-6 p-lg-0"><a class="product-view d-block h-100 bg-cover bg-center" style="background: url(../assetviews/img/product-5.jpg)" href="../assetviews/img/product-5.jpg" data-lightbox="productview" title="Red digital smartwatch"></a><a class="d-none" href="../assetviews/img/product-5-alt-1.jpg" title="Red digital smartwatch" data-lightbox="productview"></a><a class="d-none" href="../assetviews/img/product-5-alt-2.jpg" title="Red digital smartwatch" data-lightbox="productview"></a></div>
                             <div class="col-lg-6">
                                 <button class="close p-4" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                                 <div class="p-5 my-md-4">
@@ -125,9 +110,21 @@ require_once __DIR__ . "/../sessionConfig.php"
                     <h2 class="h5 text-uppercase mb-4">Browse our categories</h2>
                 </header>
                 <div class="row">
-                    <div class="col-md-4 mb-4 mb-md-0"><a class="category-item" href="shop.html"><img class="img-fluid" src="img/cat-img-1.jpg" alt=""><strong class="category-item-title">Clothes</strong></a></div>
-                    <div class="col-md-4 mb-4 mb-md-0"><a class="category-item mb-4" href="shop.html"><img class="img-fluid" src="img/cat-img-2.jpg" alt=""><strong class="category-item-title">Shoes</strong></a><a class="category-item" href="shop.html"><img class="img-fluid" src="img/cat-img-3.jpg" alt=""><strong class="category-item-title">Watches</strong></a></div>
-                    <div class="col-md-4"><a class="category-item" href="shop.html"><img class="img-fluid" src="img/cat-img-4.jpg" alt=""><strong class="category-item-title">Electronics</strong></a></div>
+                    <?php if (!empty($categories)): ?>
+                        <?php foreach ($categories as $index => $category): ?>
+                            <?php $img = $categoryImages[$index % count($categoryImages)]; ?>
+                            <div class="col-md-4 mb-4 mb-md-0">
+                                <a class="category-item" href="shop.php?category_id=<?= (int) $category['id'] ?>">
+                                    <img class="img-fluid" src="<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($category['category']) ?>">
+                                    <strong class="category-item-title"><?= htmlspecialchars($category['category']) ?></strong>
+                                </a>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="col-md-4 mb-4 mb-md-0"><a class="category-item" href="shop.php?category_id=1"><img class="img-fluid" src="../assetviews/img/cat-img-1.jpg" alt=""><strong class="category-item-title">Clothes</strong></a></div>
+                        <div class="col-md-4 mb-4 mb-md-0"><a class="category-item mb-4" href="shop.php?category_id=2"><img class="img-fluid" src="../assetviews/img/cat-img-2.jpg" alt=""><strong class="category-item-title">Shoes</strong></a><a class="category-item" href="shop.php?category_id=3"><img class="img-fluid" src="../assetviews/img/cat-img-3.jpg" alt=""><strong class="category-item-title">Watches</strong></a></div>
+                        <div class="col-md-4"><a class="category-item" href="shop.php?category_id=4"><img class="img-fluid" src="../assetviews/img/cat-img-4.jpg" alt=""><strong class="category-item-title">Electronics</strong></a></div>
+                    <?php endif; ?>
                 </div>
             </section>
             <!-- TRENDING PRODUCTS-->
@@ -141,7 +138,7 @@ require_once __DIR__ . "/../sessionConfig.php"
                     <div class="col-xl-3 col-lg-4 col-sm-6">
                         <div class="product text-center">
                             <div class="position-relative mb-3">
-                                <div class="badge text-white badge-"></div><a class="d-block" href="detail.html"><img class="img-fluid w-100" src="img/product-1.jpg" alt="..."></a>
+                                <div class="badge text-white badge-"></div><a class="d-block" href="detail.html"><img class="img-fluid w-100" src="../assetviews/img/product-1.jpg" alt="..."></a>
                                 <div class="product-overlay">
                                     <ul class="mb-0 list-inline">
                                         <li class="list-inline-item m-0 p-0"><a class="btn btn-sm btn-outline-dark" href="#"><i class="far fa-heart"></i></a></li>
@@ -158,7 +155,7 @@ require_once __DIR__ . "/../sessionConfig.php"
                     <div class="col-xl-3 col-lg-4 col-sm-6">
                         <div class="product text-center">
                             <div class="position-relative mb-3">
-                                <div class="badge text-white badge-primary">Sale</div><a class="d-block" href="detail.html"><img class="img-fluid w-100" src="img/product-2.jpg" alt="..."></a>
+                                <div class="badge text-white badge-primary">Sale</div><a class="d-block" href="detail.html"><img class="img-fluid w-100" src="../assetviews/img/product-2.jpg" alt="..."></a>
                                 <div class="product-overlay">
                                     <ul class="mb-0 list-inline">
                                         <li class="list-inline-item m-0 p-0"><a class="btn btn-sm btn-outline-dark" href="#"><i class="far fa-heart"></i></a></li>
@@ -175,7 +172,7 @@ require_once __DIR__ . "/../sessionConfig.php"
                     <div class="col-xl-3 col-lg-4 col-sm-6">
                         <div class="product text-center">
                             <div class="position-relative mb-3">
-                                <div class="badge text-white badge-"></div><a class="d-block" href="detail.html"><img class="img-fluid w-100" src="img/product-3.jpg" alt="..."></a>
+                                <div class="badge text-white badge-"></div><a class="d-block" href="detail.html"><img class="img-fluid w-100" src="../assetviews/img/product-3.jpg" alt="..."></a>
                                 <div class="product-overlay">
                                     <ul class="mb-0 list-inline">
                                         <li class="list-inline-item m-0 p-0"><a class="btn btn-sm btn-outline-dark" href="#"><i class="far fa-heart"></i></a></li>
@@ -192,7 +189,7 @@ require_once __DIR__ . "/../sessionConfig.php"
                     <div class="col-xl-3 col-lg-4 col-sm-6">
                         <div class="product text-center">
                             <div class="position-relative mb-3">
-                                <div class="badge text-white badge-info">New</div><a class="d-block" href="detail.html"><img class="img-fluid w-100" src="img/product-4.jpg" alt="..."></a>
+                                <div class="badge text-white badge-info">New</div><a class="d-block" href="detail.html"><img class="img-fluid w-100" src="../assetviews/img/product-4.jpg" alt="..."></a>
                                 <div class="product-overlay">
                                     <ul class="mb-0 list-inline">
                                         <li class="list-inline-item m-0 p-0"><a class="btn btn-sm btn-outline-dark" href="#"><i class="far fa-heart"></i></a></li>
@@ -209,7 +206,7 @@ require_once __DIR__ . "/../sessionConfig.php"
                     <div class="col-xl-3 col-lg-4 col-sm-6">
                         <div class="product text-center">
                             <div class="position-relative mb-3">
-                                <div class="badge text-white badge-danger">Sold</div><a class="d-block" href="detail.html"><img class="img-fluid w-100" src="img/product-5.jpg" alt="..."></a>
+                                <div class="badge text-white badge-danger">Sold</div><a class="d-block" href="detail.html"><img class="img-fluid w-100" src="../assetviews/img/product-5.jpg" alt="..."></a>
                                 <div class="product-overlay">
                                     <ul class="mb-0 list-inline">
                                         <li class="list-inline-item m-0 p-0"><a class="btn btn-sm btn-outline-dark" href="#"><i class="far fa-heart"></i></a></li>
@@ -226,7 +223,7 @@ require_once __DIR__ . "/../sessionConfig.php"
                     <div class="col-xl-3 col-lg-4 col-sm-6">
                         <div class="product text-center">
                             <div class="position-relative mb-3">
-                                <div class="badge text-white badge-"></div><a class="d-block" href="detail.html"><img class="img-fluid w-100" src="img/product-6.jpg" alt="..."></a>
+                                <div class="badge text-white badge-"></div><a class="d-block" href="detail.html"><img class="img-fluid w-100" src="../assetviews/img/product-6.jpg" alt="..."></a>
                                 <div class="product-overlay">
                                     <ul class="mb-0 list-inline">
                                         <li class="list-inline-item m-0 p-0"><a class="btn btn-sm btn-outline-dark" href="#"><i class="far fa-heart"></i></a></li>
@@ -243,7 +240,7 @@ require_once __DIR__ . "/../sessionConfig.php"
                     <div class="col-xl-3 col-lg-4 col-sm-6">
                         <div class="product text-center">
                             <div class="position-relative mb-3">
-                                <div class="badge text-white badge-"></div><a class="d-block" href="detail.html"><img class="img-fluid w-100" src="img/product-7.jpg" alt="..."></a>
+                                <div class="badge text-white badge-"></div><a class="d-block" href="detail.html"><img class="img-fluid w-100" src="../assetviews/img/product-7.jpg" alt="..."></a>
                                 <div class="product-overlay">
                                     <ul class="mb-0 list-inline">
                                         <li class="list-inline-item m-0 p-0"><a class="btn btn-sm btn-outline-dark" href="#"><i class="far fa-heart"></i></a></li>
@@ -260,7 +257,7 @@ require_once __DIR__ . "/../sessionConfig.php"
                     <div class="col-xl-3 col-lg-4 col-sm-6">
                         <div class="product text-center">
                             <div class="position-relative mb-3">
-                                <div class="badge text-white badge-"></div><a class="d-block" href="detail.html"><img class="img-fluid w-100" src="img/product-8.jpg" alt="..."></a>
+                                <div class="badge text-white badge-"></div><a class="d-block" href="detail.html"><img class="img-fluid w-100" src="../assetviews/img/product-8.jpg" alt="..."></a>
                                 <div class="product-overlay">
                                     <ul class="mb-0 list-inline">
                                         <li class="list-inline-item m-0 p-0"><a class="btn btn-sm btn-outline-dark" href="#"><i class="far fa-heart"></i></a></li>
@@ -343,49 +340,7 @@ require_once __DIR__ . "/../sessionConfig.php"
                 </div>
             </section>
         </div>
-        <footer class="bg-dark text-white">
-            <div class="container py-4">
-                <div class="row py-5">
-                    <div class="col-md-4 mb-3 mb-md-0">
-                        <h6 class="text-uppercase mb-3">Customer services</h6>
-                        <ul class="list-unstyled mb-0">
-                            <li><a class="footer-link" href="#">Help &amp; Contact Us</a></li>
-                            <li><a class="footer-link" href="#">Returns &amp; Refunds</a></li>
-                            <li><a class="footer-link" href="#">Online Stores</a></li>
-                            <li><a class="footer-link" href="#">Terms &amp; Conditions</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-md-4 mb-3 mb-md-0">
-                        <h6 class="text-uppercase mb-3">Company</h6>
-                        <ul class="list-unstyled mb-0">
-                            <li><a class="footer-link" href="#">What We Do</a></li>
-                            <li><a class="footer-link" href="#">Available Services</a></li>
-                            <li><a class="footer-link" href="#">Latest Posts</a></li>
-                            <li><a class="footer-link" href="#">FAQs</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-md-4">
-                        <h6 class="text-uppercase mb-3">Social media</h6>
-                        <ul class="list-unstyled mb-0">
-                            <li><a class="footer-link" href="#">Twitter</a></li>
-                            <li><a class="footer-link" href="#">Instagram</a></li>
-                            <li><a class="footer-link" href="#">Tumblr</a></li>
-                            <li><a class="footer-link" href="#">Pinterest</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="border-top pt-4" style="border-color: #1d1d1d !important">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <p class="small text-muted mb-0">&copy; 2020 All rights reserved.</p>
-                        </div>
-                        <div class="col-lg-6 text-lg-right">
-                            <p class="small text-muted mb-0">Template designed by <a class="text-white reset-anchor" href="https://bootstraptemple.com/p/bootstrap-ecommerce">Bootstrap Temple</a></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </footer>
+        <?php require_once __DIR__ . "/compenents/site/footer.php"; ?>
         <!-- JavaScript files-->
         <script src="../assetviews/vendor/jquery/jquery.min.js"></script>
         <script src="../assetviews/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
