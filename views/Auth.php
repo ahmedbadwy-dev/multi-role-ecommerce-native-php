@@ -1,5 +1,25 @@
 <?php 
-require_once __DIR__."/../sessionConfig.php"
+require_once __DIR__."/../sessionConfig.php";
+
+  
+    //    if($_SESSION["dataUser"]&&!empty($_SESSION["dataUser"])){
+    //             if(strtolower($_SESSION["dataUser"]["role"]) =="user"){
+    //                 header("location:index.php");
+    //                 exit();
+    //             } else  if (in_array("read_reports", $_SESSION["permissions"])) {
+    //         header("location:admin/ProductPage.php");
+    //         exit();
+    //     } else  if (in_array("read_post",$_SESSION["permissions"])) {
+    //         header("location:admin/ProductPage.php");
+    //         exit();
+
+    //     } else  if (in_array("read_user", $_SESSION["permissions"])) {
+    //         header("location:admin/ProductPage.php");
+    //         exit();
+    //     }
+    // }
+   
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -15,11 +35,11 @@ require_once __DIR__."/../sessionConfig.php"
     <div class="container">
 
         <?php
-        if (isset($_GET["action"]) && $_GET["action"] == "login") {
-            require_once __DIR__."/compenents/auth/FormLogin.php";
+        if (isset($_GET["action"]) && $_GET["action"] == "register") {
+            require_once __DIR__ . "/compenents/auth/FormRegister.php";
         } else {
 
-            require_once __DIR__."/compenents/auth/FormRegister.php"  ;
+            require_once __DIR__ . "/compenents/auth/FormLogin.php";
         }
         ?>
 

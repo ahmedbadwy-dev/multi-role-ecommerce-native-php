@@ -45,19 +45,26 @@ if (strlen(trim($_POST["password"])) < 8) {
 
 
         $dataUser=$ins->get_permmision_user($user["id"]);
-           
-       
-      
-        $_SESSION["dataUser"]=$dataUser;
-        if ($dataUser["role"]== "user") {
-            header("location:../../views/index.php");
-            exit();
-        }
-        else{
-        header("location:../../views/admin/index.php");
-        exit();
-        }
 
+    $permmision=explode(',',$dataUser["permissions"]);
+
+    $dataUser["permissions"]= $permmision;
+
+
+        $_SESSION["dataUser"]=$dataUser;
+  if ( strtolower($dataUser["role"])=="user") {
+        header("location:../../views/index.php");
+  }
+
+       else if ( in_array("read_reports", $dataUser["permissions"])  ) {
+        header("location:../../views/admin/index.php");
+            exit();
+        } 
+        else  if(in_array("read_post", $dataUser["permissions"])) {
+        header("location:../../views/admin/ProductPage.php");
+                exit();
+        }
+  
 
 }
 else{

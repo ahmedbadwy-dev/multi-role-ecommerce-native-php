@@ -21,7 +21,7 @@
 
 
             <p class="text-danger text-center"><?= isset($_SESSION["loginUserStatus"]) ? $_SESSION["loginUserStatus"] : '' ?></p>
-
+                   <a href="Auth.php?action=register"> Register</a>
             <div class="form-group">
                 <input type="submit" value="Login" class="btn btn-success w-100 py-1 form-control" style="font-size: 20px; ">
             </div>

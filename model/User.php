@@ -124,5 +124,17 @@ GROUP BY users.id;
         $roles = $allRoles->fetchAll();
         return $roles;
     }
-    
+
+    function check_email($email){
+
+  $sele="SELECT email from users WHERE email=?";
+
+   $pre=$this->conn->prepare($sele);
+   $pre->execute([$email]);
+
+   $res=$pre->rowCount();
+       return  $res;
+
+    }
+
 }

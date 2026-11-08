@@ -1,16 +1,22 @@
 <?php
-require_once __DIR__."/../../../sessionConfig.php";
+require_once __DIR__ . "/../../../sessionConfig.php";
+if (!$_SESSION["dataUser"]["permissions"] || !in_array("delete_post", $_SESSION["dataUser"]["permissions"])) {
+
+
+    header("location:../../../views/Auth.php");
+    exit();
+} ?>
 if (
- 
+
 ( !isset($_REQUEST["productId"])||empty($_REQUEST["productId"]) )
-    
-    &&
+
+&&
 
 ( !isset($_REQUEST["product"])||empty($_REQUEST["product"]) )
 
 ) {
-     header("location:../../../views/admin/ProductPage.php");
-     exit();
+header("location:../../../views/admin/ProductPage.php");
+exit();
 }
 
 require_once __DIR__."/../../../model/Product.php";
@@ -25,35 +31,35 @@ print_r($res);
 
 $flag=true;
 if($res){
-        $deletedImg=[];
-        foreach($res as $img){
-            $deletedImg[]=$img["image"];
-            }
-            
-    
+$deletedImg=[];
+foreach($res as $img){
+$deletedImg[]=$img["image"];
+}
 
-       if (!empty($img["main_image"]) && !in_array($img["main_image"], $deletedImg)) {
-            $deletedImg[] = $img["main_image"];
-        }
-         $flag = deleteImage($deletedImg, "../../../uploads/");
 
-            }
-            
-            $dele=$insProduct->delete_product(...$productIds);
 
-            if (!$dele) {
-                $_SESSION["deleteProductError"]="حدث خطا اثنا حذف المنتج";
-                header("location:../../../views/admin/ProductPage.php");
-                exit();
-                }
+if (!empty($img["main_image"]) && !in_array($img["main_image"], $deletedImg)) {
+$deletedImg[] = $img["main_image"];
+}
+$flag = deleteImage($deletedImg, "../../../uploads/");
+
+}
+
+$dele=$insProduct->delete_product(...$productIds);
+
+if (!$dele) {
+$_SESSION["deleteProductError"]="حدث خطا اثنا حذف المنتج";
+header("location:../../../views/admin/ProductPage.php");
+exit();
+}
 if(isset($flag) && $flag){
 
-    $_SESSION["deleteProductٍStatus"] = "تم حذف المنتج بنجاح";
-    header("location:../../../views/admin/ProductPage.php");
-    exit();
+$_SESSION["deleteProductٍStatus"] = "تم حذف المنتج بنجاح";
+header("location:../../../views/admin/ProductPage.php");
+exit();
 }
 else{
-    $_SESSION["deleteProductٍStatus"] = "لم يتم حذف كل صور المنتجات نظرا لبعض الاخطاء يرجي الذهاب الي صفحه صور المنتجات وحذفهم من هناك";
-    header("location:../../../views/admin/ProductPage.php");
-    exit();
+$_SESSION["deleteProductٍStatus"] = "لم يتم حذف كل صور المنتجات نظرا لبعض الاخطاء يرجي الذهاب الي صفحه صور المنتجات وحذفهم من هناك";
+header("location:../../../views/admin/ProductPage.php");
+exit();
 }

@@ -1,5 +1,12 @@
 <?php
 require_once __DIR__."/../../../sessionConfig.php";
+
+if (!$_SESSION["dataUser"]["permissions"] || !in_array("add_post", $_SESSION["dataUser"]["permissions"])) {
+
+
+    header("location:../../../views/Auth.php");
+    exit();
+} 
 if($_SERVER["REQUEST_METHOD"]!='POST'){
    header("location:../../../views/admin/ImagePage.php");
    exit();

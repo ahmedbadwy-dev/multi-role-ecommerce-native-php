@@ -1,5 +1,9 @@
 <?php
 require_once __DIR__."/../../../sessionConfig.php";
+if (!$_SESSION["dataUser"]["permissions"] || !in_array("delete_users", $_SESSION["dataUser"]["permissions"])) {
+    header("location:../../../views/Auth.php");
+    exit();
+}
 $userId=filter_input(INPUT_GET,"userId",FILTER_VALIDATE_INT);
 if (isset($userId)) {
 require_once __DIR__."/../../../model/User.php";

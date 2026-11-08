@@ -1,6 +1,14 @@
 <?php
 require_once __DIR__ . "/../../sessionConfig.php";
-?>
+      if(!$_SESSION["dataUser"]["permissions"] ||!in_array("read_post", $_SESSION["dataUser"]["permissions"]) ) {
+
+    header("location:../Auth.php");
+    exit();
+  
+      
+      }?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -119,3 +127,4 @@ require_once __DIR__ . "/../../sessionConfig.php";
 </body>
 
 </html>
+

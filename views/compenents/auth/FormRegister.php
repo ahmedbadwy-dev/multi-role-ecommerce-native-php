@@ -1,7 +1,4 @@
 
-
-
-
 <div class="card">
     <div class="card-header text-center">
         <h2> "Welcome User" </h2>
@@ -39,6 +36,8 @@
                 <p class="text-danger"><?= isset($_SESSION["usersError"]["birth_date"]) ? $_SESSION["usersError"]["birth_date"] : '' ?></p>
 
             </div>
+            <a href="Auth.php?action=login"> Login</a>
+
             <div class="form-group">
                 <input type="submit" value="Register" class="btn btn-success w-100 py-1 form-control" style="font-size: 20px; ">
             </div>

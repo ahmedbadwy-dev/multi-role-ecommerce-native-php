@@ -1,5 +1,9 @@
 <?php
 require_once __DIR__ . "/../../../sessionConfig.php";
+if (!$_SESSION["dataUser"]["permissions"] || !in_array("update_users", $_SESSION["dataUser"]["permissions"])) {
+    header("location:../../../views/Auth.php");
+    exit();
+}
 require_once __DIR__ . "/../../../model/User.php";
 
 $instanse = new User();
